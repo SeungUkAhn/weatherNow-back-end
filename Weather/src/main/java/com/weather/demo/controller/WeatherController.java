@@ -82,8 +82,6 @@ public class WeatherController {
 		
 		WeatherShortTermDTO dto = null;
 		
-		int count = 0;
-		
 		for(int i=0; i<shortTermWeather.size(); i++) {
 			
 			//하나의 item 가져오기
@@ -138,7 +136,6 @@ public class WeatherController {
 			}
 		}
 		
-		System.out.println("count : " + count);
 	} 
 
 	//초단기실황 - PTY, REH, RN1, T1H, UUU, VEC, VVV WSD 가져오는 메서드
