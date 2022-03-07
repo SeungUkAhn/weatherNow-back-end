@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,6 +24,7 @@ public class WeatherDAOImpl implements WeatherDAO {
 	private WeatherAPI weatherAPI;
 	
 	//초단기실황 - PTY, REH, RN1, T1H, UUU, VEC, VVV WSD 가져오는 메서드
+	@Override
 	public void setCurrentWeatherInfo(WeatherNowDTO dto){
 		
 		HttpURLConnection apiConnection = null;
@@ -40,66 +44,44 @@ public class WeatherDAOImpl implements WeatherDAO {
 		
 				if(item.get("category").toString().equals("PTY")) {			//강수형태
 					
-					int pty = Integer.parseInt(item.get("obsrValue").toString());
-					
-					if(pty == 0)
-						dto.setPTY("없음");
-					else if(pty == 1)
-						dto.setPTY("비");
-						else if(pty == 2)
-						dto.setPTY("비/눈");
-					else if(pty == 3)
-						dto.setPTY("눈");
-					else if(pty == 5)
-						dto.setPTY("빗방울");
-					else if(pty == 6)
-						dto.setPTY("빗방울눈날림");
-					else if(pty == 7)
-						dto.setPTY("눈날림");
+					String PTY = item.get("obsrValue").toString();
+					dto.setPTY(convertCode("PTY", PTY)); 
 				
 				}else if(item.get("category").toString().equals("REH")) {	//습도
-					dto.setREH(item.get("obsrValue").toString() + "%");
+					
+					String REH = item.get("obsrValue").toString();
+					dto.setREH(convertCode("REH", REH));
+					
 				}else if(item.get("category").toString().equals("RN1")) {	//1시간 강수량
 					
-					double rn1 = Double.parseDouble(item.get("obsrValue").toString());
-					
-					if(rn1 >= 50.0)
-						dto.setRN1("50.0mm 이상");
-					else if(rn1 >= 30.0)
-						dto.setRN1("30.0 ~ 50.0mm");
-					else if(rn1 >= 1.0)
-						dto.setRN1(rn1 + "mm");
-					else if(rn1 >= 0.1)
-						dto.setRN1("1.0mm 미만");
-					else
-						dto.setRN1("강수없음");
+					String RN1 = item.get("obsrValue").toString();
+					dto.setRN1(convertCode("RN1", RN1));
 					  
 				}else if(item.get("category").toString().equals("T1H")) {	//기온
-					dto.setT1H(Math.round(Double.parseDouble(item.get("obsrValue").toString())) + "°");	// 단위: ° or ℃
+					
+					String T1H = item.get("obsrValue").toString();
+					dto.setT1H(convertCode("T1H", T1H));
+					
 				}else if(item.get("category").toString().equals("UUU")) {	//동서바람성분
-					dto.setUUU(item.get("obsrValue").toString() + "m/s");
+					
+					String UUU = item.get("obsrValue").toString();
+					dto.setUUU(convertCode("UUU", UUU));
+					
 				}else if(item.get("category").toString().equals("VEC")) {	//풍향
 					
-					double degree = Double.parseDouble(item.get("obsrValue").toString());
-					int direction = (int) Math.floor((degree + 22.5*0.5) / 22.5);	//16방위 변환식 - 단기예보 가이드 23페이지
-					String vec = "";
-					
-					if(direction == 0) vec = "북"; else if(direction == 1) vec = "북북동";
-					else if(direction == 2) vec = "북동"; else if(direction == 3) vec = "동북동";
-					else if(direction == 4) vec = "동"; else if(direction == 5) vec = "동남동";
-					else if(direction == 6) vec = "남동"; else if(direction == 7) vec = "남남동";
-					else if(direction == 8) vec = "남"; else if(direction == 9) vec = "남남서";
-					else if(direction == 10) vec = "남서"; else if(direction == 11) vec = "서남서";
-					else if(direction == 12) vec = "서"; else if(direction == 13) vec = "서북서";
-					else if(direction == 14) vec = "북서"; else if(direction == 15) vec = "북북서";
-					else if(direction == 16) vec = "북";
-					
-					dto.setVEC(vec);
+					String VEC = item.get("obsrValue").toString();
+					dto.setVEC(convertCode("VEC", VEC));
 					
 				}else if(item.get("category").toString().equals("VVV")) {	//남북바람성분
-					dto.setVVV(item.get("obsrValue").toString() + "m/s");
+					
+					String VVV = item.get("obsrValue").toString();
+					dto.setVVV(convertCode("VVV", VVV));
+					
 				}else if(item.get("category").toString().equals("WSD")) {	//풍속
-					dto.setWSD(item.get("obsrValue").toString() + "m/s");
+					
+					String WSD = item.get("obsrValue").toString();
+					dto.setWSD(convertCode("WSD", WSD));
+					
 				}
 			}	
 		} catch (Exception e) {
@@ -113,6 +95,7 @@ public class WeatherDAOImpl implements WeatherDAO {
 	}//setCurrentWeatherInfo() ends
 	
 	//초단기예보에서 SKY값 가져오는 메서드
+	@Override
 	public void setSkyInfo(WeatherNowDTO dto) {
 		
 		HttpURLConnection apiConnection = null;
@@ -133,14 +116,8 @@ public class WeatherDAOImpl implements WeatherDAO {
 		
 				if(item.get("category").toString().equals("SKY")) {
 					
-					String sky = item.get("fcstValue").toString();
-					
-					if(sky.equals("1"))
-						dto.setSKY("맑음");
-					else if(sky.equals("3"))
-						dto.setSKY("구름많음");
-					else if(sky.equals("4"))
-						dto.setSKY("흐림");
+					String SKY = item.get("fcstValue").toString();
+					dto.setSKY(convertCode("SKY", SKY));
 					
 					break;
 				}	
@@ -156,6 +133,7 @@ public class WeatherDAOImpl implements WeatherDAO {
 	}//setSkyInfo() ends
 
 	//버전정보 - baseDate, baseTime 가져오는 메서드
+	@Override
 	public void setForecastVersion(WeatherNowDTO dto) {
 		
 		HttpURLConnection apiConnection = null;
@@ -208,6 +186,7 @@ public class WeatherDAOImpl implements WeatherDAO {
 	}//setForecastVersion() ends
 	
 	//단기예보 - WeatherShorTerm DTO 가져오는 메서드
+	@Override
 	public void setShortTermWeatherInfo(List<WeatherShortTermDTO> list) {
 		
 		HttpURLConnection apiConnection = null;
@@ -240,21 +219,35 @@ public class WeatherDAOImpl implements WeatherDAO {
 				if(item.get("category").toString().equals("POP")) { 
 					dto.setPOP(item.get("fcstValue").toString()); 
 				}else if(item.get("category").toString().equals("PTY")) {
-					dto.setPTY(item.get("fcstValue").toString());
+					
+					String PTY = item.get("fcstValue").toString();
+					dto.setPTY(convertCode("PTY", PTY));
+					
 				}else if(item.get("category").toString().equals("PCP")) {
 					dto.setPCP(item.get("fcstValue").toString());
 				}else if(item.get("category").toString().equals("REH")) {
-					dto.setREH(item.get("fcstValue").toString());
+					
+					String REH = item.get("fcstValue").toString();
+					dto.setREH(convertCode("REH", REH));
+					
 				}else if(item.get("category").toString().equals("SNO")) {
 					dto.setSNO(item.get("fcstValue").toString());
 				}else if(item.get("category").toString().equals("SKY")) {
-					dto.setSKY(item.get("fcstValue").toString());
+					
+					String SKY = item.get("fcstValue").toString();
+					dto.setSKY(convertCode("SKY", SKY));
+					
 				}else if(item.get("category").toString().equals("TMP")) {
 					dto.setTMP(item.get("fcstValue").toString());
 				}else if(item.get("category").toString().equals("VEC")) {
-					dto.setVEC(item.get("fcstValue").toString());
+					
+					String VEC = item.get("fcstValue").toString();
+					dto.setVEC(convertCode("VEC", VEC));
+					
 				}else if(item.get("category").toString().equals("WSD")) {
-					dto.setWSD(item.get("fcstValue").toString());
+
+					String WSD = item.get("fcstValue").toString();
+					dto.setWSD(convertCode("WSD", WSD));
 				}
 				
 				JSONObject itemToCompare = null;
@@ -309,5 +302,75 @@ public class WeatherDAOImpl implements WeatherDAO {
 		
 		return jsonArray;
 	}
+
+	//각 코드를 API문서에 맞게 해석하여 값을 변경하거나 단위를 붙여주는 메서드 
+	@Override
+	public String convertCode(String code, String value) { 
+		
+		
+		switch(code) {
+		
+			case "PTY":
+				if(value.equals("0"))
+					return "없음";
+				else if(value.equals("1"))
+					return "비";
+				else if(value.equals("2"))
+					return "비/눈";
+				else if(value.equals("3"))
+					return "눈";
+				else if(value.equals("5"))
+					return "빗방울";
+				else if(value.equals("6"))
+					return "빗방울눈날림";
+				else if(value.equals("7"))
+					return "눈날림";
+			case "REH":
+				return value + "%";
+			case "RN1" :
+				double rn1 = Double.parseDouble(value);
+				
+				if(rn1 >= 50.0)
+					return "50.0mm 이상";
+				else if(rn1 >= 30.0)
+					return "30.0 ~ 50.0mm";
+				else if(rn1 >= 1.0)
+					return value + "mm";
+				else if(rn1 >= 0.1)
+					return "1.0mm 미만";
+				else
+					return "강수없음";
+			case "T1H" :
+				return Math.round(Double.parseDouble(value)) + "°";
+			case "UUU" :
+				return value + "m/s";
+			case "VEC" :
+				double degree = Double.parseDouble(value);
+				int direction = (int) Math.floor((degree + 22.5*0.5) / 22.5);	//16방위 변환식 - 단기예보 가이드 23페이지
+				
+				if(direction == 0) return "북"; else if(direction == 1) return "북북동";
+				else if(direction == 2) return "북동"; else if(direction == 3) return "동북동";
+				else if(direction == 4) return "동"; else if(direction == 5) return "동남동";
+				else if(direction == 6) return "남동"; else if(direction == 7) return "남남동";
+				else if(direction == 8) return "남"; else if(direction == 9) return "남남서";
+				else if(direction == 10) return "남서"; else if(direction == 11) return "서남서";
+				else if(direction == 12) return "서"; else if(direction == 13) return "서북서";
+				else if(direction == 14) return "북서"; else if(direction == 15) return "북북서";
+				else if(direction == 16) return "북";
+			case "VVV" : 
+				return value + "m/s";
+			case "WSD" :
+				return value + "m/s";
+			case "SKY" :
+				if(value.equals("1"))
+					return "맑음";
+				else if(value.equals("3"))
+					return "구름많음";
+				else if(value.equals("4"))
+					return "흐림";
+		}
+		
+		return "-";
+	}//convertCode() ends
 	
 }

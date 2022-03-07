@@ -10,4 +10,5 @@ public interface WeatherDAO {
 	void setForecastVersion(WeatherNowDTO dto);
 	void setShortTermWeatherInfo(List<WeatherShortTermDTO> list);
 	JSONArray parseJsonStreamToItem(String stream);
+	String convertCode(String code, String value);
 }

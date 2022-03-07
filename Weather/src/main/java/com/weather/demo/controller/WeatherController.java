@@ -33,7 +33,7 @@ public class WeatherController {
     	return service.getCurrentWeather();
 	}
 	
-	//현재 날씨를 보여주기 위한 컨트롤러
+	//단기 날씨 예보를 보여주기 위한 컨트롤러
 	@GetMapping("shorttermweather")
 	public List<WeatherShortTermDTO> shorttermWeather() throws IOException, ParseException {
 		

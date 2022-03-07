@@ -44,11 +44,12 @@ public class WeatherAPIImpl implements WeatherAPI {
     		
     		//단기예보 API 생성 시각 : 2시, 5시, ..., 20시, 23시 (3시간마다 갱신)
     		hour = ((hour - 2) / 3 * 3) + 2;
-    		
-    		if(minute < 10) {	//단기예보
-    			if(hour % 3 == 0) //base_time 갱신되는 시각이면서 10분을 안 넘을 경우 3시간 전으로 변경
-    			hour = hour - 3;
+
+    		if(hour % 3 == 2 && minute < 10) {	//단기예보
+    			
+    			hour = hour - 3; //base_time 갱신되는 시각이면서 10분을 안 넘을 경우 3시간 전으로 변경
     		}
+    	
     	}
  
     	String base_date = LocalDate.now().toString().replace("-", "");
