@@ -42,48 +42,29 @@ public class WeatherDAOImpl implements WeatherDAO {
 				//dto 객체로 변환 후 카테고리별 데이터 가공
 				JSONObject item = (JSONObject) currentWeather.get(i);
 		
-				if(item.get("category").toString().equals("PTY")) {			//강수형태
-					
-					String PTY = item.get("obsrValue").toString();
-					dto.setPTY(convertCode("PTY", PTY)); 
+				String category = item.get("category").toString();		//카테고리값 가져오기
+				String obsrValue = item.get("obsrValue").toString();	//측정값 가져오기
 				
-				}else if(item.get("category").toString().equals("REH")) {	//습도
-					
-					String REH = item.get("obsrValue").toString();
-					dto.setREH(convertCode("REH", REH));
-					
-				}else if(item.get("category").toString().equals("RN1")) {	//1시간 강수량
-					
-					String RN1 = item.get("obsrValue").toString();
-					dto.setRN1(convertCode("RN1", RN1));
-					  
-				}else if(item.get("category").toString().equals("T1H")) {	//기온
-					
-					String T1H = item.get("obsrValue").toString();
-					dto.setT1H(convertCode("T1H", T1H));
-					
-				}else if(item.get("category").toString().equals("UUU")) {	//동서바람성분
-					
-					String UUU = item.get("obsrValue").toString();
-					dto.setUUU(convertCode("UUU", UUU));
-					
-				}else if(item.get("category").toString().equals("VEC")) {	//풍향
-					
-					String VEC = item.get("obsrValue").toString();
-					dto.setVEC(convertCode("VEC", VEC));
-					
-				}else if(item.get("category").toString().equals("VVV")) {	//남북바람성분
-					
-					String VVV = item.get("obsrValue").toString();
-					dto.setVVV(convertCode("VVV", VVV));
-					
-				}else if(item.get("category").toString().equals("WSD")) {	//풍속
-					
-					String WSD = item.get("obsrValue").toString();
-					dto.setWSD(convertCode("WSD", WSD));
-					
+				//convertCode() 메서드를 거쳐 변경된 값 카테고리별로 저장하기 
+				if(category.equals("PTY")) {			//강수형태
+					dto.setPTY(convertCode("PTY", obsrValue)); 
+				}else if(category.equals("REH")) {		//습도
+					dto.setREH(convertCode("REH", obsrValue));
+				}else if(category.equals("RN1")) {		//1시간 강수량
+					dto.setRN1(convertCode("RN1", obsrValue));
+				}else if(category.equals("T1H")) {		//기온
+					dto.setT1H(convertCode("T1H", obsrValue));
+				}else if(category.equals("UUU")) {		//동서바람성분
+					dto.setUUU(convertCode("UUU", obsrValue));
+				}else if(category.equals("VEC")) {		//풍향
+					dto.setVEC(convertCode("VEC", obsrValue));
+				}else if(category.equals("VVV")) {		//남북바람성분
+					dto.setVVV(convertCode("VVV", obsrValue));
+				}else if(category.equals("WSD")) {		//풍속
+					dto.setWSD(convertCode("WSD", obsrValue));
 				}
 			}	
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -209,63 +190,53 @@ public class WeatherDAOImpl implements WeatherDAO {
 				//하나의 item 가져오기
 				JSONObject item = (JSONObject) shortTermWeather.get(i);
 				
+				//시간에 변동이 있을 경우에만 dto 생성하기
 				if(!fcstTime.equals(item.get("fcstTime").toString())){
 					
 					dto = new WeatherShortTermDTO();
 					fcstTime = item.get("fcstTime").toString();
 				}
 				
+				String category = item.get("category").toString();
+				String fcstValue = item.get("fcstValue").toString();
+				
 				//카테고리값 받아오기
-				if(item.get("category").toString().equals("POP")) { 
-					dto.setPOP(item.get("fcstValue").toString()); 
-				}else if(item.get("category").toString().equals("PTY")) {
-					
-					String PTY = item.get("fcstValue").toString();
-					dto.setPTY(convertCode("PTY", PTY));
-					
-				}else if(item.get("category").toString().equals("PCP")) {
-					dto.setPCP(item.get("fcstValue").toString());
-				}else if(item.get("category").toString().equals("REH")) {
-					
-					String REH = item.get("fcstValue").toString();
-					dto.setREH(convertCode("REH", REH));
-					
-				}else if(item.get("category").toString().equals("SNO")) {
-					dto.setSNO(item.get("fcstValue").toString());
-				}else if(item.get("category").toString().equals("SKY")) {
-					
-					String SKY = item.get("fcstValue").toString();
-					dto.setSKY(convertCode("SKY", SKY));
-					
-				}else if(item.get("category").toString().equals("TMP")) {
-					dto.setTMP(item.get("fcstValue").toString());
-				}else if(item.get("category").toString().equals("VEC")) {
-					
-					String VEC = item.get("fcstValue").toString();
-					dto.setVEC(convertCode("VEC", VEC));
-					
-				}else if(item.get("category").toString().equals("WSD")) {
-
-					String WSD = item.get("fcstValue").toString();
-					dto.setWSD(convertCode("WSD", WSD));
+				if(category.equals("POP")) { 
+					dto.setPOP(fcstValue); 
+				}else if(category.equals("PTY")) {
+					dto.setPTY(convertCode("PTY", fcstValue));
+				}else if(category.equals("PCP")) {
+					dto.setPCP(fcstValue);
+				}else if(category.equals("REH")) {
+					dto.setREH(convertCode("REH", fcstValue));
+				}else if(category.equals("SNO")) {
+					dto.setSNO(fcstValue);
+				}else if(category.equals("SKY")) {
+					dto.setSKY(convertCode("SKY", fcstValue));
+				}else if(category.equals("TMP")) {
+					dto.setTMP(fcstValue);
+				}else if(category.equals("VEC")) {
+					dto.setVEC(convertCode("VEC", fcstValue));
+				}else if(category.equals("WSD")) {
+					dto.setWSD(convertCode("WSD", fcstValue));
 				}
 				
 				JSONObject itemToCompare = null;
 				
-				if(i != shortTermWeather.size()-1) {
-					 
+				//마지막 JSON 객체가 아니라면
+				if(i != shortTermWeather.size() - 1) {
+					//다음 객체롤 불러오기
 					itemToCompare = (JSONObject) shortTermWeather.get(i + 1);
-					 
+					 //다음시간대 예보일 경우 fcstTime, fcstDate를 dto에 입력해주고 list에 넣기  
 					 if(!fcstTime.equals(itemToCompare.get("fcstTime"))) {
 							
 						 	dto.setFcstTime(item.get("fcstTime").toString());
 							dto.setFcstDate(item.get("fcstDate").toString());
 							list.add(dto);
-							fcstTime = item.get("fcstTime").toString();
 					 }
-					 
+				//마지막 JSON 객체라면
 				}else {
-					
+					//fcstTime, fcstDate를 dto에 입력해주고 list에 넣기
 					dto.setFcstTime(item.get("fcstTime").toString());
 					dto.setFcstDate(item.get("fcstDate").toString());
 					list.add(dto);
@@ -306,7 +277,6 @@ public class WeatherDAOImpl implements WeatherDAO {
 	//각 코드를 API문서에 맞게 해석하여 값을 변경하거나 단위를 붙여주는 메서드 
 	@Override
 	public String convertCode(String code, String value) { 
-		
 		
 		switch(code) {
 		
