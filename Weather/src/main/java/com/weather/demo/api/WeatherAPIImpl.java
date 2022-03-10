@@ -68,7 +68,7 @@ public class WeatherAPIImpl implements WeatherAPI {
 	                .queryParam("dataType", "JSON")
 	                .queryParam("ftype", "ODAM")
 	                .queryParam("basedatetime", base_date + base_time).toUriString();
-    	}else if(serviceName.equals("UltraSrtNcst") || serviceName.equals("UltraSrtFcst")){										//초단기실황, 초단기예보 호출일때 파라미터 설정 
+    	}else if(serviceName.equals("UltraSrtNcst") || serviceName.equals("UltraSrtFcst")){	//초단기실황, 초단기예보 호출일때 파라미터 설정 
     		
 	        builder = UriComponentsBuilder.fromUriString(endPointURI)
 	                .queryParam("base_date", base_date)
@@ -76,10 +76,10 @@ public class WeatherAPIImpl implements WeatherAPI {
 	                .queryParam("pageNo", "1")
 	                .queryParam("numOfRows", "60")
 	                .queryParam("dataType", "JSON")
-	                .queryParam("nx", "57")
-	                .queryParam("ny", "128").toUriString();
+	                .queryParam("nx", "56")
+	                .queryParam("ny", "124").toUriString();
 	        
-    	}else if(serviceName.equals("VilageFcst")) {
+    	}else if(serviceName.equals("VilageFcst")) {	//단기예보 호출일때 파라미터 설정
     		
     		builder = UriComponentsBuilder.fromUriString(endPointURI)
 	                .queryParam("base_date", base_date)
@@ -87,8 +87,8 @@ public class WeatherAPIImpl implements WeatherAPI {
 	                .queryParam("pageNo", "1")
 	                .queryParam("numOfRows", "1000")
 	                .queryParam("dataType", "JSON")
-	                .queryParam("nx", "57")
-	                .queryParam("ny", "128").toUriString();
+	                .queryParam("nx", "56")
+	                .queryParam("ny", "124").toUriString();
     	}
     	
     	URL url = new URL(builder + serviceKey);
