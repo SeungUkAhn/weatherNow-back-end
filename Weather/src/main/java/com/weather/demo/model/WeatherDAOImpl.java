@@ -202,11 +202,11 @@ public class WeatherDAOImpl implements WeatherDAO {
 				
 				//카테고리값 받아오기
 				if(category.equals("POP")) { 
-					dto.setPOP(fcstValue); 
+					dto.setPOP(convertCode("POP", fcstValue)); 
 				}else if(category.equals("PTY")) {
 					dto.setPTY(convertCode("PTY", fcstValue));
 				}else if(category.equals("PCP")) {
-					dto.setPCP(fcstValue);
+					dto.setPCP(convertCode("PCP", fcstValue));
 				}else if(category.equals("REH")) {
 					dto.setREH(convertCode("REH", fcstValue));
 				}else if(category.equals("SNO")) {
@@ -214,7 +214,7 @@ public class WeatherDAOImpl implements WeatherDAO {
 				}else if(category.equals("SKY")) {
 					dto.setSKY(convertCode("SKY", fcstValue));
 				}else if(category.equals("TMP")) {
-					dto.setTMP(fcstValue);
+					dto.setTMP(convertCode("TMP", fcstValue));
 				}else if(category.equals("VEC")) {
 					dto.setVEC(convertCode("VEC", fcstValue));
 				}else if(category.equals("WSD")) {
@@ -338,6 +338,16 @@ public class WeatherDAOImpl implements WeatherDAO {
 					return "구름많음";
 				else if(value.equals("4"))
 					return "흐림";
+			case "TMP" :
+				return value + "°";
+			case "POP" :
+				return value + "%";
+			case "PCP" :
+				if(value.equals("강수없음")) {
+					return "0mm";
+				}else {
+					return value + "mm";
+				}
 		}
 		
 		return "-";
