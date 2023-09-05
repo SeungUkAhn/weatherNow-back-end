@@ -1,4 +1,5 @@
 #Weather Now BE
+
 기상청 API를 활용한 날씨예보 서비스 제작 토이프로젝트 Weather Now의 백엔드 프로젝트입니다.
 Spring Boot를 사용하여 REST API 패턴으로 서버를 구축했습니다.
 
